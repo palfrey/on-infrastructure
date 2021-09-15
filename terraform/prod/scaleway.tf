@@ -1,5 +1,5 @@
 provider "scaleway" {
-  project_id = "bf02f5f2-5232-4476-a99f-a68f1f28e2fd"
+  project_id = "foo-bar-baz"
 }
 
 resource "tls_private_key" "scaleway" {
