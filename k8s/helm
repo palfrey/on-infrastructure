@@ -1,0 +1,11 @@
+#!/bin/bash
+set -eux -o pipefail
+
+if [ ! -f .helm/linux-amd64/helm ]; then
+    mkdir -p .helm
+    (cd .helm
+    wget https://get.helm.sh/helm-v3.5.2-linux-amd64.tar.gz
+    tar -zxvf helm-v3.5.2-linux-amd64.tar.gz)
+fi
+
+.helm/linux-amd64/helm  --repository-cache .helm/repository --repository-config repositories.yaml $*

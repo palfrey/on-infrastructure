@@ -1,0 +1,28 @@
+deps:
+  nginx:
+    chart: ingress-nginx/ingress-nginx
+    version: 3.23.0
+    namespace: ingress-nginx
+    values:
+      controller.kind: DaemonSet
+      controller.service.type: NodePort
+      controller.hostPort.enabled: true
+      service.nodePorts.http: 80
+      service.nodePorts.https: 443
+  longhorn:
+    chart: longhorn/longhorn
+    version: 1.1.2
+    namespace: longhorn-system
+  coredns:
+    chart: coredns/coredns
+    version: 1.15.0
+    namespace: kube-system
+    values:
+      fullnameOverride: coredns
+      service.clusterIP: 10.32.0.10
+  prometheus:
+    chart: prometheus-community/kube-prometheus-stack
+    version: 16.12.1
+    namespace: prometheus
+    values:
+      grafana.adminPassword: Go7x2MYgz38JnsahqCgb9ztQj

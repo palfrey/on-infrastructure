@@ -1,0 +1,6 @@
+*.pem
+*.csr
+*.pem.command
+generated-csr-*.json
+calico-node-csr.json
+typha-csr.json

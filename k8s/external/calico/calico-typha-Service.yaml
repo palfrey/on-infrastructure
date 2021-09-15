@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    k8s-app: calico-typha
+  name: calico-typha
+  namespace: kube-system
+spec:
+  ports:
+  - name: calico-typha
+    port: 5473
+    protocol: TCP
+    targetPort: calico-typha
+  selector:
+    k8s-app: calico-typha

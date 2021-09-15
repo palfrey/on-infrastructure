@@ -1,0 +1,43 @@
+apiVersion: ''
+generated: '0001-01-01T00:00:00Z'
+repositories:
+- caFile: ''
+  certFile: ''
+  insecure_skip_tls_verify: false
+  keyFile: ''
+  name: nginx-stable
+  password: ''
+  url: https://helm.nginx.com/stable
+  username: ''
+- caFile: ''
+  certFile: ''
+  insecure_skip_tls_verify: false
+  keyFile: ''
+  name: ingress-nginx
+  password: ''
+  url: https://kubernetes.github.io/ingress-nginx
+  username: ''
+- caFile: ''
+  certFile: ''
+  insecure_skip_tls_verify: false
+  keyFile: ''
+  name: longhorn
+  password: ''
+  url: https://charts.longhorn.io
+  username: ''
+- caFile: ''
+  certFile: ''
+  insecure_skip_tls_verify: false
+  keyFile: ''
+  name: coredns
+  password: ''
+  url: https://coredns.github.io/helm
+  username: ''
+- caFile: ''
+  certFile: ''
+  insecure_skip_tls_verify: false
+  keyFile: ''
+  name: prometheus-community
+  password: ''
+  url: https://prometheus-community.github.io/helm-charts
+  username: ''

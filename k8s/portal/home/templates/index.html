@@ -1,0 +1,5 @@
+<ul>
+    {% for short_name, nice_name in names.items() %}
+    <li><a href="{{ protocol }}://{{ short_name }}.{{ root }}">{{ nice_name }}</a></li>
+    {% endfor %}
+</ul>

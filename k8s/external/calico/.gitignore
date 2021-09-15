@@ -1,0 +1,7 @@
+calico-typha-certs-Secret.*
+calico-node-certs-Secret.*
+calico-typha-ca-ConfigMap.*
+calico-typha-ClusterRoleBinding.*
+calico-typha-ServiceAccount.*
+calico-node-ClusterRoleBinding.*
+calico-node-ServiceAccount.*

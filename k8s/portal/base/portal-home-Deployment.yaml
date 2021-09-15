@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portal-home
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portal-home
+  template:
+    metadata:
+      labels:
+        app: portal-home
+    spec:
+      containers:
+      - image: ghcr.io/somerepo/on-infrastructure/portal-home:2
+        name: portal-home
+        env:
+        - name: URL_ROOT
+          value: local.placeholder
+        - name: URL_PROTOCOL
+          value: http
+        ports:
+        - containerPort: 5000
+        resources:
+          limits:
+            cpu: 100m
+            memory: 50Mi
+          requests:
+            cpu: 100m
+            memory: 50Mi
+      imagePullSecrets:
+      - name: some-github-registry

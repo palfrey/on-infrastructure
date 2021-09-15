@@ -1,0 +1,54 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: calico-typha
+rules:
+- apiGroups:
+  - ''
+  resources:
+  - pods
+  - namespaces
+  - serviceaccounts
+  - endpoints
+  - services
+  - nodes
+  verbs:
+  - watch
+  - list
+  - get
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - networkpolicies
+  verbs:
+  - watch
+  - list
+- apiGroups:
+  - crd.projectcalico.org
+  resources:
+  - globalfelixconfigs
+  - felixconfigurations
+  - bgppeers
+  - globalbgpconfigs
+  - bgpconfigurations
+  - ippools
+  - ipamblocks
+  - globalnetworkpolicies
+  - globalnetworksets
+  - networkpolicies
+  - clusterinformations
+  - hostendpoints
+  - blockaffinities
+  - networksets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - crd.projectcalico.org
+  resources:
+  - clusterinformations
+  verbs:
+  - get
+  - create
+  - update

@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- portal-flower-ingress-Ingress.yaml
+- portal-grafana-Ingress.yaml
+- portal-home-Deployment.yaml
+- portal-home-ingress-Ingress.yaml
+- portal-home-service-Service.yaml
+- portal-longhorn-operator-Ingress.yaml
+- portal-rabbitmq-ingress-Ingress.yaml
+- portal-basic-auth-default-Secret.yaml
+- portal-basic-auth-grafana-Secret.yaml
+- portal-basic-auth-longhorn-Secret.yaml

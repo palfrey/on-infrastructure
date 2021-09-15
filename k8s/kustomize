@@ -1,0 +1,14 @@
+#!/bin/bash
+set -eux -o pipefail
+
+SCRIPT_FOLDER=$(dirname $(realpath $0))
+KUSTOMIZE=${SCRIPT_FOLDER}/.downloads/kustomize
+
+if [ ! -f $KUSTOMIZE ]; then
+    mkdir -p ${SCRIPT_FOLDER}/.downloads
+    (cd ${SCRIPT_FOLDER}/.downloads
+    wget https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.3.0/kustomize_v4.3.0_linux_amd64.tar.gz
+    tar -zxvf kustomize_v4.3.0_linux_amd64.tar.gz)
+fi
+
+$KUSTOMIZE $*

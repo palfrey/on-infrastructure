@@ -1,0 +1,48 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+bases:
+- ../../base
+patches:
+- patch: |-
+    - op: replace
+      path: /data/auth
+      value: cGFsZnJleTokYXByMSRmNkZzeHhqQSRMdldwV2VjMU5kY3dyVnQ3aGNRL3MvCg==
+  target:
+    version: v1
+    kind: Secret
+- patch: |-
+    - op: replace
+      path: /spec/rules/0/host
+      value: flower.local.on-infra.net
+  target:
+    name: portal-flower-ingress
+- patch: |-
+    - op: replace
+      path: /spec/rules/0/host
+      value: grafana.local.on-infra.net
+  target:
+    name: portal-grafana
+- patch: |-
+    - op: replace
+      path: /spec/rules/0/host
+      value: portal.local.on-infra.net
+  target:
+    name: portal-home-ingress
+- patch: |-
+    - op: replace
+      path: /spec/rules/0/host
+      value: longhorn.local.on-infra.net
+  target:
+    name: portal-longhorn-operator
+- patch: |-
+    - op: replace
+      path: /spec/rules/0/host
+      value: rabbitmq.local.on-infra.net
+  target:
+    name: portal-rabbitmq-ingress
+- patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/env/0/value
+      value: local.on-infra.net:1080
+  target:
+    name: portal-home

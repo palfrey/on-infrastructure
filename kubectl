@@ -1,0 +1,14 @@
+#!/bin/bash
+set -eux -o pipefail
+
+SCRIPT_FOLDER=$(dirname $(realpath $0))
+
+KUBECTL=${SCRIPT_FOLDER}/.downloads/kubectl
+
+if [ ! -f $KUBECTL ]; then
+    mkdir -p ${SCRIPT_FOLDER}/.downloads
+    wget https://dl.k8s.io/release/v1.20.0/bin/linux/amd64/kubectl --directory-prefix=${SCRIPT_FOLDER}/.downloads
+    chmod +x $KUBECTL
+fi
+
+$KUBECTL $*

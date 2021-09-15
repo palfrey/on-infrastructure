@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cockroach-operator
+  name: cockroach-operator
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cockroach-operator
+  template:
+    metadata:
+      labels:
+        app: cockroach-operator
+    spec:
+      containers:
+      - args:
+        - feature-gates
+        - Upgrade=false
+        - -zap-log-level
+        - info
+        env:
+        - name: WATCH_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: OPERATOR_NAME
+          value: cockroachdb
+        - name: RELATED_IMAGE_COCKROACH_v19_2_12
+          value: cockroachdb/cockroach:v19.2.12
+        - name: RELATED_IMAGE_COCKROACH_v20_1_11
+          value: cockroachdb/cockroach:v20.1.11
+        - name: RELATED_IMAGE_COCKROACH_v20_1_12
+          value: cockroachdb/cockroach:v20.1.12
+        - name: RELATED_IMAGE_COCKROACH_v20_1_13
+          value: cockroachdb/cockroach:v20.1.13
+        - name: RELATED_IMAGE_COCKROACH_v20_1_14
+          value: cockroachdb/cockroach:v20.1.14
+        - name: RELATED_IMAGE_COCKROACH_v20_1_15
+          value: cockroachdb/cockroach:v20.1.15
+        - name: RELATED_IMAGE_COCKROACH_v20_1_16
+          value: cockroachdb/cockroach:v20.1.16
+        - name: RELATED_IMAGE_COCKROACH_v20_1_4
+          value: cockroachdb/cockroach:v20.1.4
+        - name: RELATED_IMAGE_COCKROACH_v20_1_5
+          value: cockroachdb/cockroach:v20.1.5
+        - name: RELATED_IMAGE_COCKROACH_v20_1_8
+          value: cockroachdb/cockroach:v20.1.8
+        - name: RELATED_IMAGE_COCKROACH_v20_2_0
+          value: cockroachdb/cockroach:v20.2.0
+        - name: RELATED_IMAGE_COCKROACH_v20_2_1
+          value: cockroachdb/cockroach:v20.2.1
+        - name: RELATED_IMAGE_COCKROACH_v20_2_2
+          value: cockroachdb/cockroach:v20.2.2
+        - name: RELATED_IMAGE_COCKROACH_v20_2_3
+          value: cockroachdb/cockroach:v20.2.3
+        - name: RELATED_IMAGE_COCKROACH_v20_2_4
+          value: cockroachdb/cockroach:v20.2.4
+        - name: RELATED_IMAGE_COCKROACH_v20_2_5
+          value: cockroachdb/cockroach:v20.2.5
+        - name: RELATED_IMAGE_COCKROACH_v20_2_6
+          value: cockroachdb/cockroach:v20.2.6
+        - name: RELATED_IMAGE_COCKROACH_v20_2_7
+          value: cockroachdb/cockroach:v20.2.7
+        - name: RELATED_IMAGE_COCKROACH_v20_2_8
+          value: cockroachdb/cockroach:v20.2.8
+        - name: RELATED_IMAGE_COCKROACH_v20_2_9
+          value: cockroachdb/cockroach:v20.2.9
+        - name: RELATED_IMAGE_COCKROACH_v20_2_10
+          value: cockroachdb/cockroach:v20.2.10
+        - name: RELATED_IMAGE_COCKROACH_v21_1_0
+          value: cockroachdb/cockroach:v21.1.0
+        - name: RELATED_IMAGE_COCKROACH_v21_1_1
+          value: cockroachdb/cockroach:v21.1.1
+        image: cockroachdb/cockroach-operator:v1.7.7
+        imagePullPolicy: IfNotPresent
+        name: cockroach-operator
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+      serviceAccountName: cockroach-operator-sa

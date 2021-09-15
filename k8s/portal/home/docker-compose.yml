@@ -1,0 +1,12 @@
+version: '3'
+services:
+  portal:
+    build: .
+    environment:
+    - URL_ROOT=local.on-infra.net:1080
+    - URL_PROTOCOL=http
+    - FLASK_ENV=development
+    ports:
+    - 6000:5000
+    volumes:
+    - .:/app

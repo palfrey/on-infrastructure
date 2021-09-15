@@ -1,0 +1,141 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    k8s-app: calico-node
+  name: calico-node
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      k8s-app: calico-node
+  template:
+    metadata:
+      labels:
+        k8s-app: calico-node
+    spec:
+      containers:
+      - env:
+        - name: DATASTORE_TYPE
+          value: kubernetes
+        - name: FELIX_TYPHAK8SSERVICENAME
+          value: calico-typha
+        - name: WAIT_FOR_DATASTORE
+          value: 'true'
+        - name: NODENAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: CALICO_NETWORKING_BACKEND
+          value: vxlan
+        - name: CLUSTER_TYPE
+          value: k8s,bgp
+        - name: IP
+          value: autodetect
+        - name: IP_AUTODETECTION_METHOD
+          value: interface=wg0
+        - name: CALICO_DISABLE_FILE_LOGGING
+          value: 'true'
+        - name: FELIX_DEFAULTENDPOINTTOHOSTACTION
+          value: ACCEPT
+        - name: FELIX_IPV6SUPPORT
+          value: 'false'
+        - name: FELIX_LOGSEVERITYSCREEN
+          value: info
+        - name: FELIX_HEALTHENABLED
+          value: 'true'
+        - name: FELIX_TYPHACAFILE
+          value: /calico-typha-ca/typha-ca.pem
+        - name: FELIX_TYPHACN
+          value: calico-typha
+        - name: FELIX_TYPHACERTFILE
+          value: /calico-node-certs/calico-node.pem
+        - name: FELIX_TYPHAKEYFILE
+          value: /calico-node-certs/calico-node-key.pem
+        - name: FELIX_INTERFACEEXCLUDE
+          value: eth0,eth1,kube-ipvs0
+        - name: FELIX_VXLANMTU
+          value: '1370'
+        image: calico/node:v3.8.0
+        livenessProbe:
+          failureThreshold: 6
+          httpGet:
+            host: localhost
+            path: /liveness
+            port: 9099
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        name: calico-node
+        readinessProbe:
+          exec:
+            command:
+            - /bin/calico-node
+            - -felix-ready
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 250m
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /lib/modules
+          name: lib-modules
+          readOnly: true
+        - mountPath: /run/xtables.lock
+          name: xtables-lock
+          readOnly: false
+        - mountPath: /var/run/calico
+          name: var-run-calico
+          readOnly: false
+        - mountPath: /var/lib/calico
+          name: var-lib-calico
+          readOnly: false
+        - mountPath: /var/run/nodeagent
+          name: policysync
+        - mountPath: /calico-typha-ca
+          name: calico-typha-ca
+          readOnly: true
+        - mountPath: /calico-node-certs
+          name: calico-node-certs
+          readOnly: true
+      hostNetwork: true
+      nodeSelector:
+        kubernetes.io/os: linux
+      priorityClassName: system-node-critical
+      serviceAccountName: calico-node
+      terminationGracePeriodSeconds: 0
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - effect: NoExecute
+        operator: Exists
+      volumes:
+      - hostPath:
+          path: /lib/modules
+        name: lib-modules
+      - hostPath:
+          path: /var/run/calico
+        name: var-run-calico
+      - hostPath:
+          path: /var/lib/calico
+        name: var-lib-calico
+      - hostPath:
+          path: /run/xtables.lock
+          type: FileOrCreate
+        name: xtables-lock
+      - hostPath:
+          path: /var/run/nodeagent
+          type: DirectoryOrCreate
+        name: policysync
+      - configMap:
+          name: calico-typha-ca
+        name: calico-typha-ca
+      - name: calico-node-certs
+        secret:
+          secretName: calico-node-certs
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate

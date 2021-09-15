@@ -1,0 +1,21 @@
+name = ENV["SERVER_NAME"] || "server"
+index = (ENV["SERVER_INDEX"] || "0").to_i
+k3s_port = (6443+index)
+http_port = (1080+index)
+https_port = (1443+index)
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "debian/buster64"
+  config.vm.hostname = name
+  config.vm.network "private_network", type: "dhcp"
+  config.vm.network "forwarded_port", guest: 6443, host: k3s_port
+  config.vm.network "forwarded_port", guest: 80, host: http_port
+  config.vm.network "forwarded_port", guest: 443, host: https_port
+  config.vm.define name do |_|
+  end
+  config.vm.provider :virtualbox do |vb|
+      vb.cpus = 4
+      vb.memory = 4096
+      vb.name = name
+  end
+end

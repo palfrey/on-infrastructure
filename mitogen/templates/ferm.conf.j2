@@ -1,0 +1,81 @@
+@def $K8S_RANGE = (10.32.0.0/24 10.244.0.0/16);
+@def $WG_RANGE = (192.168.2.0/24);
+
+domain (ip ip6) {
+    table filter {
+        chain INPUT {
+            policy DROP;
+
+            # connection tracking
+            mod state state INVALID DROP;
+            mod state state (ESTABLISHED RELATED) ACCEPT;
+
+            # allow local packet
+            interface lo ACCEPT;
+
+            # allow wireguard packets (because trusted network)
+            saddr @ipfilter($WG_RANGE) ACCEPT;
+
+            # Allow wireguard ports
+            proto (tcp udp) dport 51820 ACCEPT;
+
+            # Allow k8s ports
+            # FIXME: lockdown to just my IPs (or maybe CI?)
+            proto (tcp udp) dport 6443 ACCEPT;
+
+            # respond to ping
+            proto icmp ACCEPT;
+
+            # allow SSH connections
+            proto tcp dport ssh ACCEPT;
+
+            saddr @ipfilter($K8S_RANGE) ACCEPT;
+            daddr @ipfilter($K8S_RANGE) ACCEPT;
+
+            jump LOGGING-IN;
+        }
+        chain OUTPUT {
+            policy ACCEPT;
+
+            # connection tracking
+            mod state state (ESTABLISHED RELATED) ACCEPT;
+        }
+        chain FORWARD {
+            policy DROP;
+
+            # Source is wireguard network, so allow
+            saddr @ipfilter($WG_RANGE) ACCEPT;
+
+            saddr @ipfilter($K8S_RANGE) ACCEPT;
+            daddr @ipfilter($K8S_RANGE) ACCEPT;
+
+            # connection tracking
+            mod state state INVALID DROP;
+            mod state state (ESTABLISHED RELATED) ACCEPT;
+
+            jump LOGGING-FWD;
+        }
+
+        chain "/^KUBE-.*/" @preserve;
+
+        chain "/^cali-.*/" @preserve;
+
+        chain LOGGING-IN {
+            mod limit limit 2/min LOG log-level 4 log-prefix "IPTables-Dropped (input): ";
+            RETURN;
+        }
+
+        chain LOGGING-FWD {
+            mod limit limit 2/min LOG log-level 4 log-prefix "IPTables-Dropped (FWD): ";
+            RETURN;
+        }
+    }
+
+    table nat {
+        chain "/^.*/" @preserve;
+    }
+
+    table mangle {
+        chain "/^.*/" @preserve;
+    }
+}

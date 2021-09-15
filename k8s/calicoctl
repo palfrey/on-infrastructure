@@ -1,0 +1,14 @@
+#!/bin/bash
+set -eux -o pipefail
+
+CALICO=.downloads/calicoctl
+
+if [ ! -f $CALICO ]; then
+    mkdir -p .downloads
+    curl -L https://github.com/projectcalico/calicoctl/releases/download/v3.8.0/calicoctl -o $CALICO
+    chmod +x $CALICO
+fi
+
+export DATASTORE_TYPE=kubernetes
+
+$CALICO $*

@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/auth-realm: Authentication Required - Portal
+    nginx.ingress.kubernetes.io/auth-secret: portal-basic-auth-default
+    nginx.ingress.kubernetes.io/auth-type: basic
+  name: portal-flower-ingress
+spec:
+  rules:
+  - host: flower.placeholder
+    http:
+      paths:
+      - backend:
+          service:
+            name: c-flower-service
+            port:
+              number: 5555
+        path: /
+        pathType: Prefix
