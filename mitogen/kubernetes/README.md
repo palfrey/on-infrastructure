@@ -1,1 +1,1 @@
-https://www.downloadkubernetes.com/ has links to all the things
+Mostly derived from https://github.com/kelseyhightower/kubernetes-the-hard-way and https://docs.projectcalico.org/getting-started/kubernetes/hardway/overview
